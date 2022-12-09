@@ -1,8 +1,8 @@
 from fastapi import APIRouter
 
-router = APIRouter()
+reddit_router = APIRouter(prefix="/reddit")
 
 
-@router.get("/")
+@reddit_router.get("/")
 def get_reddit():
     return "reddit app created!"

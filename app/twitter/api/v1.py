@@ -1,8 +1,8 @@
 from fastapi import APIRouter
 
-router = APIRouter()
+twitter_router = APIRouter(prefix="/twitter")
 
 
-@router.get("/")
+@twitter_router.get("/")
 def get_twitter():
     return "twitter app created!"
