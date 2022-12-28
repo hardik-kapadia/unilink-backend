@@ -130,3 +130,5 @@ dmypy.json
 
 **cert.pem
 **key.pem
+
+**/**-oauth.yaml
