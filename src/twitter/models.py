@@ -1,77 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
-
-
-class TwitterUser:
-    def __init__(
-        self,
-        id_,
-        username,
-        name,
-        account_creation_date,
-        description,
-        pinned_tweet,
-        profile_image_url,
-        is_protected,
-        followers_count,
-        following_count,
-        tweet_count,
-        is_verified,
-        location,
-        most_recent_tweet_time,
-        most_recent_mention,
-        most_recent_like,
-        recent_tweets,
-        has_posted_media,
-    ) -> None:
-
-        self.id_ = id_
-        self.username = username
-        self.name = name
-        self.account_creation_date = account_creation_date
-        self.location = location
-        self.description = description
-        self.description_length = len(description) if description else 0
-        self.has_pinned_tweet = True if pinned_tweet else False
-        self.profile_image_url = profile_image_url
-        self.is_profile_pic_default = (
-            "default_profile_images" in str(self.profile_image_url).lower()
-        )
-        self.is_protected = is_protected
-        self.followers_count = followers_count
-        self.following_count = following_count
-        self.tweet_count = tweet_count
-        self.is_verified = is_verified
-        self.most_recent_tweet_time = most_recent_tweet_time
-        self.most_recent_mention = most_recent_mention
-        self.most_recent_like = most_recent_like
-        self.recent_tweets = recent_tweets
-        self.has_posted_media = has_posted_media
-
-    def __str__(self) -> str:
-        return f"""
-        id: {self.id_},
-        username: {self.username},
-        name: {self.name},
-        account_creation_date: {self.account_creation_date},
-        location: {self.location},
-        description: {self.description},
-        description_length: {self.description_length},
-        has_pinned_tweet: {self.has_pinned_tweet},
-        profile_image_url: {self.profile_image_url},
-        is_protected: {self.is_protected},
-        followers_count: {self.followers_count},
-        following_count: {self.following_count},
-        tweet_count: {self.tweet_count},
-        is_verified: {self.is_verified},
-        most_recent_tweet_time: {self.most_recent_tweet_time},
-        most_recent mention: {self.most_recent_mention},
-        most_recent_like: {self.most_recent_like}
-        recent_tweets: {self.recent_tweets}
-        is_profile_pic_default: {self.is_profile_pic_default}
-        self.has_posted_media = {self.has_posted_media}
-    """
-
+import json
 
 @dataclass(init=True, repr=True, frozen=True)
 class Tweet:
@@ -88,3 +17,39 @@ class Tweet:
     reply_count: int
     like_count: int
     quote_count: int
+
+@dataclass(init=True, repr=True, frozen=True)
+class TwitterUser:
+
+    id_: str
+    username: str
+    name: str
+    account_creation_date: datetime
+    description: str
+    pinned_tweet: str
+    profile_image_url: str
+    is_protected: bool
+    followers_count: int
+    following_count: int
+    tweet_count: int
+    is_verified: bool
+    location: str
+    most_recent_tweet_time: datetime
+    most_recent_mention: datetime
+    most_recent_like: datetime
+    recent_tweets: list[Tweet]
+    has_posted_media: bool
+
+    def __post_init__(self):
+        object.__setattr__(self, 'has_pinned_tweet', True if self.pinned_tweet else False)
+        object.__setattr__(self,'self.is_profile_pic_default', "default_profile_images" in str(self.profile_image_url).lower())
+
+    def toJson(self):
+        return json.dumps(self, default=myconverter)
+    
+def myconverter(o):
+    if isinstance(o, datetime):
+        return o.__str__()
+    
+    return o.__dict__
+

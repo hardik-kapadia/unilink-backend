@@ -7,7 +7,7 @@ from src.reddit.api.v1 import reddit_router
 
 from src.twitter.api.v1 import twitter_router
 
-from src.core.config import settings
+from .core.config import settings
 
 
 def get_application():

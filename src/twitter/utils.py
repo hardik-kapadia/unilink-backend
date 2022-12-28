@@ -1,9 +1,9 @@
 import yaml
 import tweepy
 
-from src.twitter.settings import Settings
+from .settings import Settings
 
-from src.twitter.models import Tweet, TwitterUser
+from .models import Tweet, TwitterUser
 
 import aiohttp
 
