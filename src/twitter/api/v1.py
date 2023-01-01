@@ -22,9 +22,10 @@ async def get_user(username: str,twitter_service : TwitterWrapper = Depends()):
 
 
 @twitter_router.get("/tweets/{username}")
-async def get_user_tweets(username: str):
-    print(f"username rcvd - {username}")
-    return "Data from user's tweets fetched"
+async def get_user_tweets(username: str,twitter_service : TwitterWrapper = Depends()):
+    user_data = twitter_service.get_user_data_from_username(username)
+    json_compatible_item_data = jsonable_encoder(user_data.recent_tweets)
+    return JSONResponse(content=json_compatible_item_data)
 
 
 @twitter_router.get("/login_receive")
