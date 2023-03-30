@@ -1,0 +1,4 @@
+from pydantic import BaseSettings, Field
+
+class Settings(BaseSettings):
+    access_token: str = 'EABWajZCu7kGoBAO7ckUp3jfbN6fp9WOf9HjKsZBhFp2G2iIFBlwDDQ8zBnIK2sjDUWqyg6pYeZBpyyGEAgS9Y9VQyugrGv4BtOrJFshKNrrPDih3pS2MU7R5hVKKAJSv2NyEtfX76PW3yRoZA1NiZBdaVWwJ7XCMBmFtHgj2Fg3c7eZAM1ZCnUOu1XUUPqw2aLLVN6ZANpu1t76IwtfgPWOC'
