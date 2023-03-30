@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from src.twitter.utils import TwitterWrapper
 from src.facebook.utils import FacebookWrapper
-# from src.reddit.utils import RedditWrapper
+from src.reddit.utils import RedditWrapper
 
 from src.reddit.api.v1 import reddit_router
 
@@ -27,7 +27,7 @@ def get_application():
 
     common_prefix = "/api/v" + str(version)
 
-    # _app.include_router(router=reddit_router, prefix=common_prefix)
+    _app.include_router(router=reddit_router, prefix=common_prefix)
     _app.include_router(router=twitter_router, prefix=common_prefix)
     _app.include_router(router=facebook_router, prefix=common_prefix)
 
@@ -35,6 +35,6 @@ def get_application():
 
 twitter_service = TwitterWrapper()
 facebook_service = FacebookWrapper()
-# reddit_service = RedditWrapper()
+reddit_service = RedditWrapper()
 
 app = get_application()

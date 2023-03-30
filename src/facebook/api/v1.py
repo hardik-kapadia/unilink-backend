@@ -17,7 +17,7 @@ def get_user_id(facebook_service : FacebookWrapper = Depends()):
 
 @facebook_router.get('/user_data')
 def get_user_data(facebook_service : FacebookWrapper = Depends()):
-    user_data = facebook_service.get_user_data()
+    user_data = facebook_service.get_user_details()
     json_compatible_item_data = jsonable_encoder(user_data)
     return JSONResponse(content=json_compatible_item_data)
 

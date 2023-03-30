@@ -4,9 +4,9 @@ from pydantic import AnyHttpUrl, BaseSettings, validator
 
 
 class Settings(BaseSettings):
-    PROJECT_NAME: str
+    PROJECT_NAME: str = 'Unilink'
     BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = []
-    VERSION: str
+    VERSION: str = '0.1'
 
     @validator("BACKEND_CORS_ORIGINS", pre=True)
     def assemble_cors_origins(cls, v: Union[str, List[str]]) -> Union[List[str], str]:
