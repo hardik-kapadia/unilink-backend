@@ -1,7 +1,7 @@
 import yaml
 import facebook
 from settings import Settings
-
+from pprint import pprint
 class FacebookWrapper:
     def __init__(self):
         self.settings = Settings()
@@ -12,13 +12,14 @@ class FacebookWrapper:
         user = self.graph.get_object(id="me", fields="about")
         return user
     
-    def get_user_posts(self,id):
-        posts = self.graph.get_object(id=id,fields='posts')
+    def get_user_posts(self):
+        res = self.graph.get_object(id='me',fields='posts')
+        posts = res['posts']
+        full_post = self.graph.get_object(id=posts['data'][0]['id'])
+        print(full_post)
         return posts
-    
 
-if __name__ == '__main__':
-    wrapper = FacebookWrapper()
-    userid = wrapper.get_user_id()
-    posts = wrapper.get_user_posts(userid)
-    print(posts)
+    def get_user_details(self):
+        res = self.graph.get_object(id='me',fields='name,birthday,email,gender,hometown,location')
+        return res
+        
