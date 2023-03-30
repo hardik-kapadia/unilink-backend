@@ -1,6 +1,6 @@
 import yaml
 import facebook
-from settings import Settings
+from src.facebook.settings import Settings
 from pprint import pprint
 class FacebookWrapper:
     def __init__(self):

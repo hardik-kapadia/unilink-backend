@@ -1,5 +1,5 @@
 from fastapi import APIRouter,Depends
-from utils import FacebookWrapper
+from src.facebook.utils import FacebookWrapper
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
