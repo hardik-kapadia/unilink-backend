@@ -10,7 +10,7 @@ class RedditWrapper:
         self.reddit = praw.Reddit(
             client_id=self.settings.client_id,
             client_secret=self.settings.client_secret,
-            password=self.settings.password,
+            # password=self.settings.password,
             user_agent=self.settings.user_agent,
             username=self.settings.username,
         )
@@ -89,11 +89,13 @@ class RedditWrapper:
         subreddit = self.reddit.subreddit(rslash)
         print(subreddit.title)
         for submission in subreddit.top(limit=1):
+            print(f'submission: {submission}')
             mapped_submission = self.map_submission(submission)
-            print(mapped_submission)
+            print(f'mapped_submission {mapped_submission}')
             return mapped_submission
 
 
     def get_redditor_by_username(self,redditor_name):
         redditor_object = self.reddit.redditor(redditor_name)
+        print(f'redditor_object : {redditor_object}')
         return self.map_redditor(redditor_object)
