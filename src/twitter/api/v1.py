@@ -28,7 +28,8 @@ async def get_user_tweets(username: str,twitter_service : TwitterWrapper = Depen
     return JSONResponse(content=json_compatible_item_data)
 
 
-@twitter_router.get("/login_receive")
-async def twitter_auth(state: str, code: str):
-    print(f"state: {state}")
-    print(f"code: {code}")
+@twitter_router.get("/create_tweet")
+async def create_twitter_tweet(text:str,twitter_service : TwitterWrapper = Depends()):
+    res = twitter_service.create_tweet(text)
+    json_compatible_item_data = jsonable_encoder(res)
+    return JSONResponse(content=json_compatible_item_data)

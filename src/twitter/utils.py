@@ -202,3 +202,11 @@ class TwitterWrapper:
             return tweets.data[0].created_at
 
         return None
+
+    def create_tweet(self,text):
+        res = ''
+        try:
+            res = self.client.create_tweet(text)
+        except Exception as e:
+            res = {'error': str(e)}
+        return res
