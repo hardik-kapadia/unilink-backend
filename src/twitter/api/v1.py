@@ -33,3 +33,9 @@ async def create_twitter_tweet(text:str,twitter_service : TwitterWrapper = Depen
     res = twitter_service.create_tweet(text)
     json_compatible_item_data = jsonable_encoder(res)
     return JSONResponse(content=json_compatible_item_data)
+
+@twitter_router.get('/delete_tweet')
+async def delete_tweet_by_id(tweet_id:int,twitter_service:TwitterWrapper = Depends()):
+    res = twitter_service.delete_tweet(tweet_id)
+    json_compatible_item_data = jsonable_encoder(res)
+    return JSONResponse(content=json_compatible_item_data)

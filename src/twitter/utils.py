@@ -9,23 +9,23 @@ import aiohttp
 
 
 class TwitterWrapper:
-    def __init__(self, filename: str = "twitter-oauth.yaml") -> None:
+    def __init__(self, filename: str = "D:/Dev/Python/unilink-backend/src/static/twitter-oauth.yaml") -> None:
 
         settings = Settings()
-        # temp_twitter_auth_data = {}
+        temp_twitter_auth_data = {}
 
-        # with open(filename, "r") as yamlfile:
-        #     temp_twitter_auth_data = yaml.load(yamlfile, Loader=yaml.FullLoader)
+        with open(filename, "r") as yamlfile:
+            temp_twitter_auth_data = yaml.load(yamlfile, Loader=yaml.FullLoader)
 
-        # self.twitter_auth_creds = temp_twitter_auth_data["TWITTER"]
+        self.twitter_auth_creds = temp_twitter_auth_data["TWITTER"]
 
         self.client = tweepy.Client(
-            # access_token=self.twitter_auth_creds["ACCESS_TOKEN"],
-            # access_token_secret=self.twitter_auth_creds["ACCESS_TOKEN_SECRET"],
-            # consumer_key=self.twitter_auth_creds["COSUMER_KEY"],
-            # consumer_secret=self.twitter_auth_creds["CONSUMER_SECRET"],
-            # bearer_token=self.twitter_auth_creds["BEARER_TOKEN"],
-            bearer_token=settings.bearer_token,
+            access_token=self.twitter_auth_creds["ACCESS_TOKEN"],
+            access_token_secret=self.twitter_auth_creds["ACCESS_TOKEN_SECRET"],
+            consumer_key=self.twitter_auth_creds["CONSUMER_KEY"],
+            consumer_secret=self.twitter_auth_creds["CONSUMER_SECRET"],
+            bearer_token=self.twitter_auth_creds["BEARER_TOKEN"],
+            # bearer_token=settings.bearer_token,
             wait_on_rate_limit=True,
         )
 
@@ -206,7 +206,15 @@ class TwitterWrapper:
     def create_tweet(self,text):
         res = ''
         try:
-            res = self.client.create_tweet(text)
+            res = self.client.create_tweet(text=text)
+        except Exception as e:
+            res = {'error': str(e)}
+        return res
+    
+    def delete_tweet(self,tweet_id):
+        res = ''
+        try:
+            res= self.client.delete_tweet(id=id)
         except Exception as e:
             res = {'error': str(e)}
         return res
