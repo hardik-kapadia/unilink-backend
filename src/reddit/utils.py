@@ -3,7 +3,7 @@ import tweepy
 import praw
 from src.reddit.settings import Settings
 from src.reddit.models import Submission, Redditor
-
+from pprint import pprint
 class RedditWrapper:
     def __init__(self):
         self.settings = Settings()
@@ -47,10 +47,14 @@ class RedditWrapper:
 
 
     def map_redditor(self,redditor_object):
+        submissions = redditor_object.submissions.new()
+        l = []
+        for i in submissions:
+            l.append(self.map_submission(i))
         mapped_redditor = Redditor(
             redditor_object.comment_karma,
             redditor_object.comments,
-            redditor_object.submissions,
+            l,
             redditor_object.created_utc,
             redditor_object.has_verified_email,
             redditor_object.icon_img,
@@ -95,7 +99,18 @@ class RedditWrapper:
             return mapped_submission
 
 
-    def get_redditor_by_username(self,redditor_name):
+    def get_redditor_by_username(self,redditor_name='RagingBox08'):
         redditor_object = self.reddit.redditor(redditor_name)
-        print(f'redditor_object : {redditor_object}')
-        return self.map_redditor(redditor_object)
+        # print(f'redditor_object : {redditor_object}')
+        # print(f'submissions: {redditor_object.submissions.hot()}')
+        # for i in redditor_object.submissions.hot():
+        #     print(f'i:{type(i)}')
+        mapped = self.map_redditor(redditor_object).__dict__
+        submissions = mapped['submissions']
+        l = []
+        for i in submissions:
+            mapped_sub = self.map_submission(i).__dict__
+            l.append(mapped_sub)
+        mapped['submissions'] = l
+        return mapped
+    

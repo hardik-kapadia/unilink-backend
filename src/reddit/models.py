@@ -124,7 +124,7 @@ class Redditor:
                 ):
                 self.comment_karma = str(comment_karma)
                 self.comments = str(comments)
-                self.submissions = str(submissions)
+                self.submissions = submissions
                 self.created_utc = created_utc
                 self.has_verified_email = has_verified_email
                 self.icon_img = icon_img
