@@ -4,6 +4,8 @@ import praw
 from src.reddit.settings import Settings
 from src.reddit.models import Submission, Redditor
 from pprint import pprint
+
+
 class RedditWrapper:
     def __init__(self):
         self.settings = Settings()
@@ -14,9 +16,22 @@ class RedditWrapper:
             user_agent=self.settings.user_agent,
             username=self.settings.username,
         )
+        # self.reddit = praw.Reddit(
+        #     client_id=self.settings.client_id,
+        #     client_secret=self.settings.client_secret,
+        #     redirect_uri="http://localhost:8080",
+        #     user_agent="unilink",
+        # )
         print(self.reddit)
         pass
-    def map_submission(self,submission):
+
+    async def autthorise_user(self, code):
+        res = await self.reddit.auth.authorize(code)
+        # print(res)
+        print(f"reddit me: {self.reddit.user.me()}")
+        return res
+
+    def map_submission(self, submission):
         mapped_submission = Submission(
             submission.author,
             submission.author_flair_text,
@@ -45,8 +60,7 @@ class RedditWrapper:
         )
         return mapped_submission
 
-
-    def map_redditor(self,redditor_object):
+    def map_redditor(self, redditor_object):
         submissions = redditor_object.submissions.new()
         l = []
         for i in submissions:
@@ -69,15 +83,13 @@ class RedditWrapper:
         )
         return mapped_redditor
 
-
-    def get_new_post(self,rslash):
+    def get_new_post(self, rslash):
         subreddit = self.reddit.subreddit(rslash)
         for submission in subreddit.new(limit=1):
             mapped_submission = self.map_submission(submission)
             return mapped_submission
 
-
-    def get_hot_post(self,rslash):
+    def get_hot_post(self, rslash):
         subreddit = self.reddit.subreddit(rslash)
         print(subreddit.title)
         c = 0
@@ -88,29 +100,35 @@ class RedditWrapper:
             mapped_submission = self.map_submission(submission)
             return mapped_submission
 
-
-    def get_top_post(self,rslash):
+    def get_top_post(self, rslash):
         subreddit = self.reddit.subreddit(rslash)
         print(subreddit.title)
         for submission in subreddit.top(limit=1):
-            print(f'submission: {submission}')
+            print(f"submission: {submission}")
             mapped_submission = self.map_submission(submission)
-            print(f'mapped_submission {mapped_submission}')
+            print(f"mapped_submission {mapped_submission}")
             return mapped_submission
 
-
-    def get_redditor_by_username(self,redditor_name='RagingBox08'):
+    def get_redditor_by_username(self, redditor_name="RagingBox08"):
         redditor_object = self.reddit.redditor(redditor_name)
         # print(f'redditor_object : {redditor_object}')
         # print(f'submissions: {redditor_object.submissions.hot()}')
         # for i in redditor_object.submissions.hot():
         #     print(f'i:{type(i)}')
         mapped = self.map_redditor(redditor_object).__dict__
-        submissions = mapped['submissions']
+        submissions = mapped["submissions"]
         l = []
         for i in submissions:
             mapped_sub = self.map_submission(i).__dict__
             l.append(mapped_sub)
-        mapped['submissions'] = l
+        mapped["submissions"] = l
         return mapped
-    
+
+    def get_user_subreddits(
+        self,
+    ):
+        subreddits = self.reddit.user()
+        print(f"subreddits: {subreddits}")
+        print(type(subreddits))
+
+        return "get_user_sub called"
