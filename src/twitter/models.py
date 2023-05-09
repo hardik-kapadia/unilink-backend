@@ -2,9 +2,9 @@ from dataclasses import dataclass
 from datetime import datetime
 import json
 
+
 @dataclass(init=True, repr=True, frozen=True)
 class Tweet:
-
     id_: str
     text: str
     edit_history_tweet_ids: bool
@@ -18,9 +18,9 @@ class Tweet:
     like_count: int
     quote_count: int
 
+
 @dataclass(init=True, repr=True, frozen=True)
 class TwitterUser:
-
     id_: str
     username: str
     name: str
@@ -41,15 +41,21 @@ class TwitterUser:
     has_posted_media: bool
 
     def __post_init__(self):
-        object.__setattr__(self, 'has_pinned_tweet', True if self.pinned_tweet else False)
-        object.__setattr__(self,'self.is_profile_pic_default', "default_profile_images" in str(self.profile_image_url).lower())
+        object.__setattr__(
+            self, "has_pinned_tweet", True if self.pinned_tweet else False
+        )
+        object.__setattr__(
+            self,
+            "self.is_profile_pic_default",
+            "default_profile_images" in str(self.profile_image_url).lower(),
+        )
 
     def toJson(self):
         return json.dumps(self, default=myconverter)
-    
+
+
 def myconverter(o):
     if isinstance(o, datetime):
         return o.__str__()
-    
-    return o.__dict__
 
+    return o.__dict__

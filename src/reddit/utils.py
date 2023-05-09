@@ -9,27 +9,41 @@ from pprint import pprint
 class RedditWrapper:
     def __init__(self):
         self.settings = Settings()
-        self.reddit = praw.Reddit(
-            client_id=self.settings.client_id,
-            client_secret=self.settings.client_secret,
-            # password=self.settings.password,
-            user_agent=self.settings.user_agent,
-            username=self.settings.username,
-        )
         # self.reddit = praw.Reddit(
         #     client_id=self.settings.client_id,
         #     client_secret=self.settings.client_secret,
-        #     redirect_uri="http://localhost:8080",
-        #     user_agent="unilink",
+        #     # password=self.settings.password,
+        #     user_agent=self.settings.user_agent,
+        #     username=self.settings.username,
         # )
-        print(self.reddit)
+        self.reddit = praw.Reddit(
+            client_id=self.settings.client_id,
+            client_secret=self.settings.client_secret,
+            redirect_uri="unilink://reddit.login",
+            user_agent="unilink",
+        )
+        self.refresh_token = ""
         pass
 
-    async def autthorise_user(self, code):
-        res = await self.reddit.auth.authorize(code)
+    def autthorise_user(self, code):
+        res = self.reddit.auth.authorize(code)
         # print(res)
         print(f"reddit me: {self.reddit.user.me()}")
         return res
+
+    def create_instance_using_refresh_token(self, refresh_token, access_token):
+        self.reddit = praw.Reddit(
+            client_id=self.settings.client_id,
+            client_secret=self.settings.client_secret,
+            refresh_token=refresh_token,
+            # access_token=access_token,
+            # redirect_uri="unilink://reddit.login",
+            user_agent="unilink",
+        )
+        self.refresh_token = refresh_token
+        print(f"scopes: {self.reddit.auth.scopes()}")
+        print(self.reddit.user.me())
+        return self.reddit.user.me()
 
     def map_submission(self, submission):
         mapped_submission = Submission(
@@ -127,8 +141,33 @@ class RedditWrapper:
     def get_user_subreddits(
         self,
     ):
-        subreddits = self.reddit.user()
-        print(f"subreddits: {subreddits}")
-        print(type(subreddits))
+        if self.refresh_token != "":
+            # reddit = praw.Reddit(
+            #     client_id=self.settings.client_id,
+            #     client_secret=self.settings.client_secret,
+            #     refresh_token=self.refresh_token,
+            #     user_agent="unilink",
+            # )
+            # self.reddit = praw.Reddit(
+            #     client_id=self.settings.client_id,
+            #     client_secret=self.settings.client_secret,
+            #     refresh_token=self.refresh_token,
+            #     # access_token=access_token,
+            #     # redirect_uri="unilink://reddit.login",
+            #     user_agent="unilink",
+            # )
+            print("get_user_subreddit called")
+            subs = self.reddit.user.subreddits()
+            for i in subs:
+                print(i.display_name)
+            return "get_user_sub called"
+        else:
+            return "Not logged in to reddit"
 
-        return "get_user_sub called"
+    def post_on_subreddit(self, subreddit_name, text, title):
+        try:
+            sub = self.reddit(subreddit_name)
+            res = sub.submit(title=title, selftext=text)
+            return res
+        except Exception as e:
+            return str(e)

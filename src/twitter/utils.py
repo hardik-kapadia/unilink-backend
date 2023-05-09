@@ -9,8 +9,10 @@ import aiohttp
 
 
 class TwitterWrapper:
-    def __init__(self, filename: str = "D:/Dev/Python/unilink-backend/src/static/twitter-oauth.yaml") -> None:
-
+    def __init__(
+        self,
+        filename: str = "D:/Dev/Python/unilink-backend/src/static/twitter-oauth.yaml",
+    ) -> None:
         settings = Settings()
         temp_twitter_auth_data = {}
 
@@ -33,11 +35,10 @@ class TwitterWrapper:
         authorization_code: str,
     ):
         async with aiohttp.ClientSession() as session:
-            
             settings = Settings()
 
             headers = {"content-type": "application/x-www-form-urlencoded"}
-            
+
             data = {
                 "code": authorization_code,
                 "client_id": settings.client_id,
@@ -55,7 +56,6 @@ class TwitterWrapper:
         return "123"
 
     def get_user_data_from_username(self, screen_name: str):
-
         user_data = self.client.get_user(
             username=screen_name,
             user_fields=[
@@ -78,7 +78,7 @@ class TwitterWrapper:
             user_data.data.id,
             user_data.data.username,
             user_data.data.name,
-            user_data.data.created_at,
+            str(user_data.data.created_at),
             user_data.data.description,
             user_data.data.pinned_tweet_id,
             user_data.data.profile_image_url,
@@ -103,12 +103,11 @@ class TwitterWrapper:
         )
 
         if tweets.data and len(tweets.data) > 0:
-            return tweets.data[0].created_at
+            return str(tweets.data[0].created_at)
 
         return None
 
-    def get_users_recent_tweets(self, user_id, max_tweets=100):
-
+    def get_users_recent_tweets(self, user_id, max_tweets=10):
         tweets = self.client.get_users_tweets(
             user_id,
             tweet_fields=[
@@ -130,7 +129,6 @@ class TwitterWrapper:
         has_posted = False
 
         for tweet in tweets.data:
-
             tweet_context_annotations = []
 
             tweet_id = tweet.id
@@ -146,13 +144,12 @@ class TwitterWrapper:
                     has_posted = True
 
             for context in tweet_temp_context_annotations:
-
                 entity_name = context["entity"]["name"]
 
                 if not entity_name in tweet_context_annotations:
                     tweet_context_annotations.append(entity_name)
 
-            tweet_created_at = tweet.created_at
+            tweet_created_at = str(tweet.created_at)
             tweet_in_reply_to_user_id = True if tweet.in_reply_to_user_id else False
             tweet_possibly_sensitive = tweet.possibly_sensitive
             tweet_retweet_count = tweet.public_metrics["retweet_count"]
@@ -182,39 +179,37 @@ class TwitterWrapper:
         return (final_tweets, has_posted)
 
     def get_users_most_recent_mention(self, id):
-
         tweets = self.client.get_users_mentions(
             id=id, tweet_fields=["created_at"], max_results=5
         )
 
         if tweets.data and len(tweets.data) > 0:
-            return tweets.data[0].created_at
+            return str(tweets.data[0].created_at)
 
         return None
 
     def get_user_most_recent_like(self, id):
-
         tweets = self.client.get_liked_tweets(
             id=id, tweet_fields=["created_at"], max_results=5
         )
 
         if tweets.data and len(tweets.data) > 0:
-            return tweets.data[0].created_at
+            return str(tweets.data[0].created_at)
 
         return None
 
-    def create_tweet(self,text):
-        res = ''
+    def create_tweet(self, text):
+        res = ""
         try:
             res = self.client.create_tweet(text=text)
         except Exception as e:
-            res = {'error': str(e)}
+            res = {"error": str(e)}
         return res
-    
-    def delete_tweet(self,tweet_id):
-        res = ''
+
+    def delete_tweet(self, tweet_id):
+        res = ""
         try:
-            res= self.client.delete_tweet(id=id)
+            res = self.client.delete_tweet(id=id)
         except Exception as e:
-            res = {'error': str(e)}
+            res = {"error": str(e)}
         return res
