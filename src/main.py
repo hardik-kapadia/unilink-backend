@@ -9,6 +9,7 @@ from src.reddit.api.v1 import reddit_router
 
 from src.twitter.api.v1 import twitter_router
 from src.facebook.api.v1 import facebook_router
+from src.cnn.api.v1 import ccnn_router
 
 from .core.config import settings
 
@@ -30,8 +31,10 @@ def get_application():
     _app.include_router(router=reddit_router, prefix=common_prefix)
     _app.include_router(router=twitter_router, prefix=common_prefix)
     _app.include_router(router=facebook_router, prefix=common_prefix)
+    _app.include_router(router=ccnn_router, prefix=common_prefix)
 
     return _app
+
 
 twitter_service = TwitterWrapper()
 facebook_service = FacebookWrapper()

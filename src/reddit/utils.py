@@ -1,3 +1,4 @@
+from fastapi import File, UploadFile
 import yaml
 import tweepy
 import praw
@@ -165,9 +166,26 @@ class RedditWrapper:
             return "Not logged in to reddit"
 
     def post_on_subreddit(self, subreddit_name, text, title):
+        print("post on subreddit")
         try:
-            sub = self.reddit(subreddit_name)
+            sub = self.reddit.subreddit(subreddit_name)
+            print(sub)
             res = sub.submit(title=title, selftext=text)
+            print(res)
             return res
         except Exception as e:
+            print(e)
+            return str(e)
+
+    def post_image_on_subreddit(
+        self, subname: str, my_file: UploadFile = File(...), title: str = ""
+    ):
+        try:
+            sub = self.reddit.subreddit(subname)
+            print(sub)
+            res = sub.submit_image(title=title, image=my_file)
+            print(res)
+            return res
+        except Exception as e:
+            print(e)
             return str(e)

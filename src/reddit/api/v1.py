@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, File, UploadFile
 from src.reddit.utils import RedditWrapper
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
@@ -58,4 +58,13 @@ def get_user_subreddits():
 
 @reddit_router.get("/submission/{subreddit}/{title}/{text}")
 def create_post_on_subreddit(subreddit, title, text):
-    res = reddit_service.post_on_subreddit(subreddit, title, text)
+    res = str(reddit_service.post_on_subreddit(subreddit, title, text))
+    return res
+
+
+@reddit_router.post("/submit_image")
+def file_upload(my_file: UploadFile = File(...), subreddit: str = "", title: str = ""):
+    print("inside reddit upload image")
+    print(my_file)
+    res = reddit_service.post_image_on_subreddit(my_file, subreddit, title)
+    return res
