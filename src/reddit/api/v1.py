@@ -56,7 +56,7 @@ def get_user_subreddits():
     return JSONResponse(res)
 
 
-@reddit_router.get("/submission/{subreddit}/{title}/{text}")
+@reddit_router.get("/submission")
 def create_post_on_subreddit(subreddit, title, text):
     res = str(reddit_service.post_on_subreddit(subreddit, title, text))
     return res
